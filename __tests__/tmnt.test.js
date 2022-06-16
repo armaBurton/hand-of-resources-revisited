@@ -188,8 +188,6 @@ describe('hand-of-resources-revisited routes', () => {
 
     const checkForRemoval = await request(app).get('/api/v1/tmnt/7');
 
-    console.log('|| checkForRemoval.body >', checkForRemoval.body);
-
     expect(checkForRemoval.body).toEqual({
       status: 404,
       message: 'No character matching id 7 currently exists',

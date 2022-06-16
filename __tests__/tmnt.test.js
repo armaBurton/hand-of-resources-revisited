@@ -149,4 +149,50 @@ describe('hand-of-resources-revisited routes', () => {
       ...newCharacterCorrectData,
     });
   });
+
+  it('should delete a character with the matching ID', async () => {
+    const uploadCharacterToDelete = {
+      name: 'April ONeil',
+      creatureType: 'Human',
+      weaponProficency: 'None',
+      groupAffiliation: 'TMNT Ally',
+      personality: ['Cheerful', 'Friendly', 'Hard Working'],
+      alignment: 'Good',
+      stats: {
+        IQ: '19',
+        ME: '11',
+        MA: '13',
+        PS: '13',
+        PP: '14',
+        PE: '11',
+        PB: '14',
+        SPD: '13',
+      },
+    };
+
+    const loadNewCharacter = await request(app)
+      .post('/api/v1/tmnt')
+      .send(uploadCharacterToDelete);
+
+    expect(loadNewCharacter.body).toEqual({
+      id: expect.any(String),
+      ...uploadCharacterToDelete,
+    });
+
+    const res = await request(app).delete('/api/v1/tmnt/7');
+
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      ...uploadCharacterToDelete,
+    });
+
+    const checkForRemoval = await request(app).get('/api/v1/tmnt/7');
+
+    console.log('|| checkForRemoval.body >', checkForRemoval.body);
+
+    expect(checkForRemoval.body).toEqual({
+      status: 404,
+      message: 'No character matching id 7 currently exists',
+    });
+  });
 });

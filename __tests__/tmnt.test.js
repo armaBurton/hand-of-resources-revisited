@@ -98,4 +98,55 @@ describe('hand-of-resources-revisited routes', () => {
 
     expect(res.body).toEqual(expected);
   });
+
+  it('should update a charcter that matches Id', async () => {
+    const newCharacterIncorrectData = {
+      name: 'April ONeil',
+      creatureType: 'Human',
+      weaponProficency: 'None',
+      groupAffiliation: 'TMNT Ally',
+      personality: ['Cheerful', 'Friendly', 'Hard Working'],
+      alignment: 'Principled',
+      stats: {
+        IQ: '19',
+        ME: '11',
+        MA: '13',
+        PS: '13',
+        PP: '14',
+        PE: '11',
+        PB: '14',
+        SPD: '13',
+      },
+    };
+
+    const newCharacterCorrectData = {
+      name: 'April ONeil',
+      creatureType: 'Human',
+      weaponProficency: 'None',
+      groupAffiliation: 'TMNT Ally',
+      personality: ['Cheerful', 'Friendly', 'Hard Working'],
+      alignment: 'Good',
+      stats: {
+        IQ: '19',
+        ME: '11',
+        MA: '13',
+        PS: '13',
+        PP: '14',
+        PE: '11',
+        PB: '14',
+        SPD: '13',
+      },
+    };
+
+    await request(app).post('/api/v1/tmnt').send(newCharacterIncorrectData);
+
+    const res = await request(app)
+      .patch('/api/v1/tmnt/7')
+      .send(newCharacterCorrectData);
+
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      ...newCharacterCorrectData,
+    });
+  });
 });
